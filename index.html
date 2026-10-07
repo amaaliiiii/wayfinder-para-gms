@@ -1,6 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script>
+(function () {
+  var KEY = "PremioDiario2026MX";
+  var STORE = "wayfinder-gm-access";
+  window.__WF_GATE = { KEY: KEY, STORE: STORE };
+  try {
+    if (sessionStorage.getItem(STORE) === KEY) return;
+  } catch (e) {}
+  document.documentElement.classList.add("wf-locked");
+})();
+</script>
+<style>
+html.wf-locked, html.wf-locked body { background: #f7f8f9; }
+html.wf-locked body > *:not(.gate) { display: none !important; }
+html:not(.wf-locked) .gate { display: none !important; }
+.gate{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:24px;background:#f7f8f9}
+.gate-card{width:100%;max-width:360px;display:flex;flex-direction:column;gap:10px;padding:28px 24px;border:1px solid #eceff3;border-radius:20px;background:#fff;box-shadow:0 18px 40px rgba(33,34,36,.08)}
+.gate-card b{font-size:20px;line-height:24px}
+.gate-card span{font-size:12px;line-height:16px;color:#919aaa;margin-bottom:10px}
+.gate-card input{height:44px;padding:0 14px;border:1px solid #eceff3;border-radius:12px;background:#f7f8f9;font-size:14px;font-family:inherit}
+.gate-card input:focus{outline:none;border-color:#7a4cf4;background:#fff}
+.gate-card em{font-size:12px;font-style:normal;color:#c43333}
+.gate-card button{height:44px;border:0;border-radius:1000px;background:#000;color:#fff;font-size:14px;font-weight:650;font-family:inherit;cursor:pointer}
+</style>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#141414">
@@ -816,6 +840,38 @@ button { font: inherit; color: inherit; }
 </style>
 </head>
 <body>
+
+<div class="gate" id="wfGate">
+  <form class="gate-card" id="wfGateForm">
+    <b>Wayfinder</b>
+    <span>Para GMs. Personalization &amp; Merchandising automation</span>
+    <input type="password" name="clave" autocomplete="current-password" autofocus placeholder="Clave de acceso" aria-label="Clave de acceso">
+    <em id="wfGateError" hidden>Clave incorrecta</em>
+    <button type="submit">Entrar</button>
+  </form>
+</div>
+<script>
+(function () {
+  var g = window.__WF_GATE;
+  if (!g) return;
+  var form = document.getElementById("wfGateForm");
+  if (!form) return;
+  var input = form.querySelector("input");
+  var err = document.getElementById("wfGateError");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!input || input.value.trim() !== g.KEY) {
+      if (err) err.hidden = false;
+      return;
+    }
+    try { sessionStorage.setItem(g.STORE, g.KEY); } catch (e2) {}
+    document.documentElement.classList.remove("wf-locked");
+  });
+  if (input) input.addEventListener("input", function () {
+    if (err) err.hidden = true;
+  });
+})();
+</script>
 
 <header class="topbar">
   <div class="topbar__inner">
